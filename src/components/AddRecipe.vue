@@ -27,14 +27,6 @@
         </n-button>
       </n-form-item>
     </n-form>
-        
-    <n-card title="Card">
-        <pre>{{ formValue.name }}
-        </pre>
-    </n-card>
-
-  
-    
 
 </template>
 

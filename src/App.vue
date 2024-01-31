@@ -4,12 +4,17 @@
       <n-layout>
         <n-layout-content content-style="padding: 24px;">
           <n-space style="padding-bottom: 24px;">
+            <!-- <n-button>{{theme}}</n-button> -->
             <n-button @click="theme = darkTheme">Dark</n-button>
             <n-button @click="theme = lightTheme">Light</n-button>
           </n-space>
           <AddRecipe />
+
+          <n-divider dashed>
+             <n-h2>Comments</n-h2>
+          </n-divider>
         
-          <RecipeList/>
+          <RecipeList :recipies="posts"></RecipeList>
         </n-layout-content>
       </n-layout>
       <!-- <n-global-style /> -->
@@ -20,14 +25,14 @@
 </template>
 
 <script>
-import {ref} from 'vue';
+import {ref, reactive} from 'vue';
 
 import AddRecipe from '@/components/AddRecipe'
-import RecipeDetail from '@/components/RecipeDetail'
+
 import RecipeList from '@/components/RecipeList'
 
 
-import { darkTheme, lightTheme, NConfigProvider, NGlobalStyle, NSpace, NButton, NLayout, NLayoutHeader, NLayoutContent, NMessageProvider } from 'naive-ui';
+import { darkTheme, lightTheme, NConfigProvider, NGlobalStyle, NSpace, NButton, NLayout, NLayoutHeader, NLayoutContent, NMessageProvider, NDivider, NH2 } from 'naive-ui';
 
 export default {
   name: 'app',
@@ -35,23 +40,47 @@ export default {
   components: {
     AddRecipe,
     RecipeList,
-    RecipeDetail,
     NConfigProvider,
     NGlobalStyle,
     NSpace,
     NButton,
     NLayout,
     NLayoutContent,
-    NMessageProvider
+    NMessageProvider,
+    NDivider,
+    NH2
   },
 
-  setup(){
+  // let posts = reactive([
+
+  // ])
+
+  data(){
     return{
-      theme: ref(darkTheme),
+      lightTheme,
       darkTheme,
-      lightTheme
+      theme: darkTheme,
+
+      posts: [
+        {id: 1, title:"Skotnik", body: 'i popki ih gremyat'},
+        {id: 2, title:"Skotnik", body: 'i popki ih gremyat-2'},
+        {id: 3, title:"Skotnik", body: 'i popki ih gremyat-3'}
+      ]
     }
-  }
+  },
+
+  // mounted(){
+  //   console.log(lightTheme)
+  //   console.log(darkTheme)
+  // },
+
+  // setup(){
+  //   return{
+  //     theme: ref(darkTheme),
+  //     darkTheme,
+  //     lightTheme
+  //   }
+  // }
 }
 </script>
 

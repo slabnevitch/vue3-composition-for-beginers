@@ -1,36 +1,31 @@
 <template>
- <n-list hoverable clickable>
-    <n-list-item>
-      <n-thing title="Better Late Than Never" content-style="margin-top: 10px;">
-        Lorem ipsum dolor sit amet,<br>
-        consectetur adipiscing elit,<br>
-        sed do eiusmod tempor incididunt<br>
-        ut labore et dolore magna aliqua.<br>
-        Ut enim ad minim veniam,<br>
-        quis nostrud exercitation ullamco
-      </n-thing>
-    </n-list-item>
+  <!-- {{recipies}} -->
+  <n-list hoverable clickable>
+    <RecipeDetail v-for="item, i in recipies" :recipe="item" />
   </n-list>
 </template>
 
 <script>
   import { NSpace, NList, NListItem, NThing } from 'naive-ui';
+  import RecipeDetail from '@/components/RecipeDetail'
+
 export default {
   components: {
     NSpace,
     NList,
     NListItem,
-    NThing
-  }
-  // props: {
-  //   recipies: {
-  //     type: Array,
-  //     default: () => []
-  //   },
-  //   setCurrent: {
-  //     type: Function
-  //   }
-  // },
+    NThing,
+    RecipeDetail
+  },
+  props: {
+    recipies: {
+      type: Array,
+      default: () => []
+    }
+    // setCurrent: {
+    //   type: Function
+    // }
+  },
 //   methods: {
 //     clickRecipie(id){
 //       console.log(id)
