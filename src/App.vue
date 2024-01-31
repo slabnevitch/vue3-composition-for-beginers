@@ -1,15 +1,26 @@
 <template>
-  <div class="container">
-    <AddRecipe :onAdd="onAdd" />
+  <n-config-provider :theme="darkTheme">
+    <n-layout>
+      <n-layout-content content-style="padding: 24px;">
+      <!--   <n-space>
+          <n-button @click="theme = darkTheme">Dark</n-button>
+          <n-button @click="theme = null">Light</n-button>
+        </n-space> -->
+        <AddRecipe :onAdd="onAdd" />
+      
+      </n-layout-content>
+    </n-layout>
+    <n-global-style />
 
-    <div class="columns">
-      <RecipeList :recipies="recipies"
-        :setCurrent="setCurrent" />
-      <RecipeDetail :recipe="current"
-        @deleteRecipe="remove" />
-    </div>
-    {{recipies}}
-  </div>
+      <!-- <div class="columns">
+        <RecipeList :recipies="recipies"
+          :setCurrent="setCurrent" />
+        <RecipeDetail :recipe="current"
+          @deleteRecipe="remove" />
+      </div> -->
+  
+  </n-config-provider>
+
 </template>
 
 <script>
@@ -18,6 +29,7 @@ import RecipeDetail from '@/components/RecipeDetail'
 import RecipeList from '@/components/RecipeList'
 
 import {useApp} from '@/compositions/app'
+import { darkTheme, NConfigProvider, NGlobalStyle, NSpace, NButton, NLayout, NLayoutHeader, NLayoutContent } from 'naive-ui';
 
 export default {
   name: 'app',
@@ -25,11 +37,19 @@ export default {
   components: {
     AddRecipe,
     RecipeList,
-    RecipeDetail
+    RecipeDetail,
+    NConfigProvider,
+    NGlobalStyle,
+    NSpace,
+    NButton,
+    NLayout,
+    NLayoutContent
   },
+  
   setup(){
     return{
-      ...useApp()
+      ...useApp(),
+       darkTheme
     }
   }
 }

@@ -1,73 +1,129 @@
 <template>
-  <form class="form" @submit.prevent="submit">
-    <h1>Добавить рецепт</h1>
-    <p>{{ isValid }}</p>
-    <div v-if="visible">
-      <div class="input">
-        <input type="text" placeholder="Название рецепта" v-model.trim="form.title" />
-      </div>
-      <div class="input">
-        <input type="text" placeholder="Описание рецепта" v-model.trim="form.description" />
-      </div>
-    </div>
+  
+    
+  <n-form
+    ref="formRef"
 
-    <div class="buttons">
-      <button class="btn" type="submit">Создать</button>
-      <button class="btn secondary" type="button" @click="toggle">
-        {{visible ? 'Убрать' : 'Показать'}} форму
-      </button>
-    </div>
-  </form>
-</template>
+  >
+    <n-form-item label="Name" path="user.name">
+      <n-input  placeholder="Input Name" />
+    </n-form-item>
+    <n-form-item label="Age" path="user.age">
+      <n-input placeholder="Input Age" />
+    </n-form-item>
+    <n-form-item label="Phone" path="phone">
+      <n-input  placeholder="Phone Number" />
+    </n-form-item>
+    <n-form-item>
+      <n-button>
+        Validate
+      </n-button>
+    </n-form-item>
+  </n-form>
+      <!-- <h1>Pizdyk</h1> -->
+      
+  <n-card title="Card">
+    Card Content
+  </n-card>
+      
+ 
+
+    <!-- <form class="form" @submit.prevent="submit">
+      <h1>Добавить рецепт</h1>
+      <div>
+        <div class="input">
+          <input type="text" placeholder="Название рецепта" />
+        </div>
+        <div class="input">
+          <input type="text" placeholder="Описание рецепта" />
+        </div>
+      </div>
+
+      <div class="buttons">
+          <n-button attr-type="submit">Добавить</n-button>
+        <button class="btn" type="submit"></button> 
+        <button class="btn secondary" type="button">
+        </button>
+      </div>
+    </form> -->
+  </template>
+
 
 <script>
-  import {ref, reactive, computed} from 'vue'
-export default {
+  import {ref, reactive, computed} from 'vue';
+  import { NButton, NCard, NForm, NFormItem, NInput } from 'naive-ui';
+
+export default{
+  components: {
+       NButton,
+       NForm,
+      NInput,
+       NCard,
+       NFormItem
+    },
   props: {
     onAdd: {
       type: Function
     }
   },
-  setup(props) {//вызывается еще до создания компонента, поэтому тут недоступен this
-  //в ф-цию. setup передается объект props, чтобы внутри setup(){} были доступны переданные в компонент извне св-ва.
-
-    const visible = ref(true);//для придания реактивности простые значения
-    //оборачивваются в ref
-    const toggle = () => {
-      //создание метода
-      visible.value = !visible.value;//у значений, обернутых в ref() нужно использовать параметр .value
-    };
-
-    const form = reactive({//для придания реактивности объекты и массивы
-    //оборачивваются в  reactive()
-      title: '',
-      description: ''
-    })
-    const isValid = computed(() => {//создание computed св-ва.
-      return form.title !== '' && form.description !== ""
-    })
-    function submit(){
-      console.log("submit");
-      const recipe = {
-        title: form.title,//обращение к св-вам. без ключевого слова 
-        description: form.description,//обращение к св-вам. без ключевого слова this
-        id: Date.now().toString()
-      };
-
-      form.title = form.description = ''
-      console.log(recipe);
-
-      props.onAdd(recipe);//использование св-ва. из props
-    }
-
+  setup() {
+    // const formRef = ref(null);
+    // const rPasswordFormItemRef = ref(null);
+    // const message = useMessage();
+    // const modelRef = ref({
+    //   age: null,
+    //   password: null,
+    //   reenteredPassword: null
+    // });
+    // function validatePasswordStartWith(rule, value) {
+    //   return !!modelRef.value.password && modelRef.value.password.startsWith(value) && modelRef.value.password.length >= value.length;
+    // }
+    // function validatePasswordSame(rule, value) {
+    //   return value === modelRef.value.password;
+    // }
+    // const rules = {
+    //   age: [
+    //     {
+    //       required: true,
+    //       validator(rule, value) {
+    //         if (!value) {
+    //           return new Error("Age is required");
+    //         } else if (!/^\d*$/.test(value)) {
+    //           return new Error("Age should be an integer");
+    //         } else if (Number(value) < 18) {
+    //           return new Error("Age should be above 18");
+    //         }
+    //         return true;
+    //       },
+    //       trigger: ["input", "blur"]
+    //     }
+    //   ],
+    //   password: [
+    //     {
+    //       required: true,
+    //       message: "Password is required"
+    //     }
+    //   ],
+    //   reenteredPassword: [
+    //     {
+    //       required: true,
+    //       message: "Re-entered password is required",
+    //       trigger: ["input", "blur"]
+    //     },
+    //     {
+    //       validator: validatePasswordStartWith,
+    //       message: "Password is not same as re-entered password!",
+    //       trigger: "input"
+    //     },
+    //     {
+    //       validator: validatePasswordSame,
+    //       message: "Password is not same as re-entered password!",
+    //       trigger: ["blur", "password-input"]
+    //     }
+    //   ]
+    // };
     return {
-      //нужно вернуть те данные, которые должны быть
-      //доступны в шаблоне
-      visible,
-      toggle,
-      form,
-      submit,
-      isValid
+
     };
   }
 };
