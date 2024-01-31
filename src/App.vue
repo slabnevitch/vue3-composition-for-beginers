@@ -1,35 +1,33 @@
 <template>
-  <n-config-provider :theme="darkTheme">
-    <n-layout>
-      <n-layout-content content-style="padding: 24px;">
-      <!--   <n-space>
-          <n-button @click="theme = darkTheme">Dark</n-button>
-          <n-button @click="theme = null">Light</n-button>
-        </n-space> -->
-        <AddRecipe :onAdd="onAdd" />
-      
-      </n-layout-content>
-    </n-layout>
-    <n-global-style />
-
-      <!-- <div class="columns">
-        <RecipeList :recipies="recipies"
-          :setCurrent="setCurrent" />
-        <RecipeDetail :recipe="current"
-          @deleteRecipe="remove" />
-      </div> -->
+  <n-message-provider>
+    <n-config-provider :theme="theme">
+      <n-layout>
+        <n-layout-content content-style="padding: 24px;">
+          <n-space style="padding-bottom: 24px;">
+            <n-button @click="theme = darkTheme">Dark</n-button>
+            <n-button @click="theme = lightTheme">Light</n-button>
+          </n-space>
+          <AddRecipe />
+        
+          <RecipeList/>
+        </n-layout-content>
+      </n-layout>
+      <!-- <n-global-style /> -->
+    </n-config-provider>
   
-  </n-config-provider>
+  </n-message-provider>
 
 </template>
 
 <script>
+import {ref} from 'vue';
+
 import AddRecipe from '@/components/AddRecipe'
 import RecipeDetail from '@/components/RecipeDetail'
 import RecipeList from '@/components/RecipeList'
 
-import {useApp} from '@/compositions/app'
-import { darkTheme, NConfigProvider, NGlobalStyle, NSpace, NButton, NLayout, NLayoutHeader, NLayoutContent } from 'naive-ui';
+
+import { darkTheme, lightTheme, NConfigProvider, NGlobalStyle, NSpace, NButton, NLayout, NLayoutHeader, NLayoutContent, NMessageProvider } from 'naive-ui';
 
 export default {
   name: 'app',
@@ -43,13 +41,15 @@ export default {
     NSpace,
     NButton,
     NLayout,
-    NLayoutContent
+    NLayoutContent,
+    NMessageProvider
   },
-  
+
   setup(){
     return{
-      ...useApp(),
-       darkTheme
+      theme: ref(darkTheme),
+      darkTheme,
+      lightTheme
     }
   }
 }

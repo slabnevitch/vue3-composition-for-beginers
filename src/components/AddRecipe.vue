@@ -1,57 +1,47 @@
 <template>
   
+  
+    <n-form
+      ref="formRef"
+      :model="formValue" 
+      :rules="rules"
+    >
+      <n-form-item label="Name" path="name">
+        <n-input  v-model:value="formValue.name" placeholder="Olexander" />
+      </n-form-item>
+
+     <n-form-item :span="12" label="Comment" path="text">
+        <n-input
+          placeholder="Text of comment"
+          type="textarea"
+          v-model:value="formValue.text"
+          :autosize="{
+            minRows: 3,
+            maxRows: 10
+          }"
+        />
+      </n-form-item>
+      <n-form-item>
+        <n-button @click="handleValidateClick">
+          Создать
+        </n-button>
+      </n-form-item>
+    </n-form>
+        
+    <n-card title="Card">
+        <pre>{{ formValue.name }}
+        </pre>
+    </n-card>
+
+  
     
-  <n-form
-    ref="formRef"
 
-  >
-    <n-form-item label="Name" path="user.name">
-      <n-input  placeholder="Input Name" />
-    </n-form-item>
-    <n-form-item label="Age" path="user.age">
-      <n-input placeholder="Input Age" />
-    </n-form-item>
-    <n-form-item label="Phone" path="phone">
-      <n-input  placeholder="Phone Number" />
-    </n-form-item>
-    <n-form-item>
-      <n-button>
-        Validate
-      </n-button>
-    </n-form-item>
-  </n-form>
-      <!-- <h1>Pizdyk</h1> -->
-      
-  <n-card title="Card">
-    Card Content
-  </n-card>
-      
- 
-
-    <!-- <form class="form" @submit.prevent="submit">
-      <h1>Добавить рецепт</h1>
-      <div>
-        <div class="input">
-          <input type="text" placeholder="Название рецепта" />
-        </div>
-        <div class="input">
-          <input type="text" placeholder="Описание рецепта" />
-        </div>
-      </div>
-
-      <div class="buttons">
-          <n-button attr-type="submit">Добавить</n-button>
-        <button class="btn" type="submit"></button> 
-        <button class="btn secondary" type="button">
-        </button>
-      </div>
-    </form> -->
-  </template>
+</template>
 
 
 <script>
   import {ref, reactive, computed} from 'vue';
-  import { NButton, NCard, NForm, NFormItem, NInput } from 'naive-ui';
+  import { NButton, NCard, NForm, NFormItem, NInput, useMessage, NMessageProvider } from 'naive-ui';
 
 export default{
   components: {
@@ -59,72 +49,49 @@ export default{
        NForm,
       NInput,
        NCard,
-       NFormItem
+       NFormItem,
+       useMessage,
+       NMessageProvider
     },
-  props: {
-    onAdd: {
-      type: Function
+    data(){
+      return{
+        message: useMessage(),
+
+        formValue: {
+          // user:{
+           name: null,
+           text: null
+          // }
+       },
+       rules: {
+        name: {
+          required: true,
+          message: 'Please input your name',
+          trigger: 'blur'
+        },
+        text: {
+          required: true,
+          message: 'Please input your message',
+          trigger: ['input', 'blur']
+        }
+      }
     }
   },
-  setup() {
-    // const formRef = ref(null);
-    // const rPasswordFormItemRef = ref(null);
-    // const message = useMessage();
-    // const modelRef = ref({
-    //   age: null,
-    //   password: null,
-    //   reenteredPassword: null
-    // });
-    // function validatePasswordStartWith(rule, value) {
-    //   return !!modelRef.value.password && modelRef.value.password.startsWith(value) && modelRef.value.password.length >= value.length;
-    // }
-    // function validatePasswordSame(rule, value) {
-    //   return value === modelRef.value.password;
-    // }
-    // const rules = {
-    //   age: [
-    //     {
-    //       required: true,
-    //       validator(rule, value) {
-    //         if (!value) {
-    //           return new Error("Age is required");
-    //         } else if (!/^\d*$/.test(value)) {
-    //           return new Error("Age should be an integer");
-    //         } else if (Number(value) < 18) {
-    //           return new Error("Age should be above 18");
-    //         }
-    //         return true;
-    //       },
-    //       trigger: ["input", "blur"]
-    //     }
-    //   ],
-    //   password: [
-    //     {
-    //       required: true,
-    //       message: "Password is required"
-    //     }
-    //   ],
-    //   reenteredPassword: [
-    //     {
-    //       required: true,
-    //       message: "Re-entered password is required",
-    //       trigger: ["input", "blur"]
-    //     },
-    //     {
-    //       validator: validatePasswordStartWith,
-    //       message: "Password is not same as re-entered password!",
-    //       trigger: "input"
-    //     },
-    //     {
-    //       validator: validatePasswordSame,
-    //       message: "Password is not same as re-entered password!",
-    //       trigger: ["blur", "password-input"]
-    //     }
-    //   ]
-    // };
-    return {
 
-    };
+  methods: {
+    handleValidateClick (e) {
+      e.preventDefault();
+        console.log(this.formValue.name)
+
+      this.$refs.formRef.validate((errors) => {
+        if (!errors) {
+          this.message.success('Valid');
+        } else {
+          console.log(errors);
+          this.message.error('Invalid');
+        }
+      })
+    }
   }
 };
 </script>

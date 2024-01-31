@@ -1,34 +1,42 @@
 <template>
-  <div class="list">
-    <div v-if="recipies.length">
-      <div class="card"
-        v-for="recipie in recipies" :key="recipie.id"
-        @click="clickRecipie(recipie.id)">
-        <h2 class="card-title">{{recipie.title}}</h2>
-      </div>
-    </div>
-
-    <p v-else class="center">Нет рецептов. Добавьте первый</p>
-  </div>
+ <n-list hoverable clickable>
+    <n-list-item>
+      <n-thing title="Better Late Than Never" content-style="margin-top: 10px;">
+        Lorem ipsum dolor sit amet,<br>
+        consectetur adipiscing elit,<br>
+        sed do eiusmod tempor incididunt<br>
+        ut labore et dolore magna aliqua.<br>
+        Ut enim ad minim veniam,<br>
+        quis nostrud exercitation ullamco
+      </n-thing>
+    </n-list-item>
+  </n-list>
 </template>
 
 <script>
+  import { NSpace, NList, NListItem, NThing } from 'naive-ui';
 export default {
-  props: {
-    recipies: {
-      type: Array,
-      default: () => []
-    },
-    setCurrent: {
-      type: Function
-    }
-  },
-  methods: {
-    clickRecipie(id){
-      console.log(id)
-      this.setCurrent(id)
-    }
+  components: {
+    NSpace,
+    NList,
+    NListItem,
+    NThing
   }
+  // props: {
+  //   recipies: {
+  //     type: Array,
+  //     default: () => []
+  //   },
+  //   setCurrent: {
+  //     type: Function
+  //   }
+  // },
+//   methods: {
+//     clickRecipie(id){
+//       console.log(id)
+//       this.setCurrent(id)
+//     }
+//   }
 }
 </script>
 
