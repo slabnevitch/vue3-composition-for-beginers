@@ -8,7 +8,7 @@
             <n-button @click="theme = darkTheme">Dark</n-button>
             <n-button @click="theme = lightTheme">Light</n-button>
           </n-space>
-          <AddRecipe />
+          <AddRecipe @addPost="postAdd" />
 
           <n-divider dashed>
              <n-h2>Comments</n-h2>
@@ -68,6 +68,15 @@ export default {
       ]
     }
   },
+
+  methods: {
+    postAdd(newPost){
+      this.posts.push(newPost);
+    }
+    // postRemove(newPost){
+    //   this.posts.push(newPost);
+    // }
+  }
 
   // mounted(){
   //   console.log(lightTheme)

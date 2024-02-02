@@ -1,6 +1,6 @@
 <template>
   <!-- {{recipies}} -->
-  <n-list hoverable clickable>
+  <n-list>
     <RecipeDetail v-for="item, i in recipies" :recipe="item" />
   </n-list>
 </template>

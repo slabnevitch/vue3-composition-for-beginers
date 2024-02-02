@@ -1,6 +1,4 @@
 <template>
-  
-  
     <n-form
       ref="formRef"
       :model="formValue" 
@@ -78,6 +76,12 @@ export default{
       this.$refs.formRef.validate((errors) => {
         if (!errors) {
           this.message.success('Valid');
+          this.$emit('addPost', {
+            id: new Date(), 
+            title: this.formValue.name,
+            body: this.formValue.text 
+          });
+          this.formValue.name = this.formValue.text = '';
         } else {
           console.log(errors);
           this.message.error('Invalid');
