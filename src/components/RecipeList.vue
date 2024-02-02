@@ -1,12 +1,13 @@
 <template>
   <!-- {{recipies}} -->
+  <n-button @click="customPropClick">change customProp</n-button>
   <n-list>
-    <RecipeDetail v-for="item, i in recipies" :recipe="item" />
+    <RecipeDetail v-for="item, i in recipies" :key="item.id" :recipe="item" @remove="postRemoveFromList"/>
   </n-list>
 </template>
 
 <script>
-  import { NSpace, NList, NListItem, NThing } from 'naive-ui';
+  import { NSpace, NList, NListItem, NThing, NButton } from 'naive-ui';
   import RecipeDetail from '@/components/RecipeDetail'
 
 export default {
@@ -15,23 +16,32 @@ export default {
     NList,
     NListItem,
     NThing,
-    RecipeDetail
+    RecipeDetail,
+    NButton
   },
   props: {
     recipies: {
       type: Array,
       default: () => []
+    },
+    customProp: {
+      type: Number,
+      default: 0
     }
     // setCurrent: {
     //   type: Function
     // }
   },
-//   methods: {
-//     clickRecipie(id){
-//       console.log(id)
-//       this.setCurrent(id)
-//     }
-//   }
+  methods: {
+    postRemoveFromList(removedPost){
+      this.$emit('remove', removedPost);
+    },
+    customPropClick(){
+      this.customProp + 1;
+      console.log(this.customProp);
+      this.$emit('update:customProp', this.customProp);
+    }
+  }
 }
 </script>
 

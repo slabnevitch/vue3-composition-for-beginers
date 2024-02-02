@@ -3,6 +3,7 @@
     <n-config-provider :theme="theme">
       <n-layout>
         <n-layout-content content-style="padding: 24px;">
+          <h1>{{customProp}}</h1>
           <n-space style="padding-bottom: 24px;">
             <!-- <n-button>{{theme}}</n-button> -->
             <n-button @click="theme = darkTheme">Dark</n-button>
@@ -14,7 +15,7 @@
              <n-h2>Comments</n-h2>
           </n-divider>
         
-          <RecipeList :recipies="posts"></RecipeList>
+          <RecipeList :recipies="posts" @remove="postRemove" v-model:number="customProp"></RecipeList>
         </n-layout-content>
       </n-layout>
       <!-- <n-global-style /> -->
@@ -57,6 +58,8 @@ export default {
 
   data(){
     return{
+      customProp: 0,
+
       lightTheme,
       darkTheme,
       theme: darkTheme,
@@ -72,10 +75,10 @@ export default {
   methods: {
     postAdd(newPost){
       this.posts.push(newPost);
+    },
+    postRemove(deletedPost){
+      this.posts = this.posts.filter(post => post.id !== deletedPost.id);
     }
-    // postRemove(newPost){
-    //   this.posts.push(newPost);
-    // }
   }
 
   // mounted(){

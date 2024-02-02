@@ -1,4 +1,5 @@
 <template>
+    
     <n-form
       ref="formRef"
       :model="formValue" 
@@ -71,7 +72,6 @@ export default{
   methods: {
     handleValidateClick (e) {
       e.preventDefault();
-        console.log(this.formValue.name)
 
       this.$refs.formRef.validate((errors) => {
         if (!errors) {
@@ -83,7 +83,7 @@ export default{
           });
           this.formValue.name = this.formValue.text = '';
         } else {
-          console.log(errors);
+          // console.log(errors);
           this.message.error('Invalid');
         }
       })

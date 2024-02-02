@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     removePost(){
-      
+      this.$emit('remove', this.recipe);
     }
   }
 }
