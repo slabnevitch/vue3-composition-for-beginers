@@ -10,8 +10,8 @@
   </n-divider>
   
   <n-list v-if="recipies.length > 0">
-    <n-select v-model:value="selectValue" :options="options" />
-    <RecipeDetail v-for="item, i in recipies" :key="item.id" :recipe="item" @remove="postRemoveFromList"/>
+    <n-select v-model:value="selectValue" :options="options" placeholder="Сортировка" />
+    <RecipeDetail v-for="item, i in sortedRcipies" :key="item.id" :recipe="item" @remove="postRemoveFromList"/>
   </n-list>
 
   <n-divider  v-else dashed>
@@ -38,6 +38,7 @@ export default {
   props: {
     recipies: {
       type: Array,
+      required: true,
       default: () => []
     },
     customProp: {
@@ -57,59 +58,16 @@ export default {
       selectValue: null,
       options: [
         {
-          label: "Everybody's Got Something to Hide Except Me and My Monkey",
-          value: "song0",
-          disabled: true
+          label: "По заголовку",
+          value: "title"
         },
         {
-          label: "Drive My Car",
-          value: "song1"
+          label: "По содержанию",
+          value: "body"
         },
         {
-          label: "Norwegian Wood",
-          value: "song2"
-        },
-        {
-          label: "You Won't See",
-          value: "song3",
-          disabled: true
-        },
-        {
-          label: "Nowhere Man",
-          value: "song4"
-        },
-        {
-          label: "Think For Yourself",
-          value: "song5"
-        },
-        {
-          label: "The Word",
-          value: "song6"
-        },
-        {
-          label: "Michelle",
-          value: "song7",
-          disabled: true
-        },
-        {
-          label: "What goes on",
-          value: "song8"
-        },
-        {
-          label: "Girl",
-          value: "song9"
-        },
-        {
-          label: "I'm looking through you",
-          value: "song10"
-        },
-        {
-          label: "In My Life",
-          value: "song11"
-        },
-        {
-          label: "Wait",
-          value: "song12"
+          label: "По идентификатору",
+          value: "id"
         }
       ]
     }
@@ -126,6 +84,11 @@ export default {
     // selchange(){
     //   console.log('slect!')
     // }
+  },
+  computed: {
+    sortedRcipies(){
+      return [...this.recipies].sort((post1, post2) => post1[this.selectValue]?.toString().localeCompare(post2[this.selectValue].toString()));
+    }
   },
   watch: {
     selectValue(){
