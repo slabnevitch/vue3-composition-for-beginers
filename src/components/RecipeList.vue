@@ -9,10 +9,15 @@
     Comments
   </n-divider>
   
-  <n-list v-if="recipies.length > 0">
-    <n-select v-model:value="selectValue" :options="options" placeholder="Сортировка" />
-    <RecipeDetail v-for="item, i in sortedRcipies" :key="item.id" :recipe="item" @remove="postRemoveFromList"/>
-  </n-list>
+    <n-list  v-if="recipies.length > 0">
+      <n-input v-model:value="search" type="text" placeholder="Basic Input" />
+      <n-select v-model:value="selectValue" :options="options" placeholder="Сортировка" />
+      
+      <transition-group name="pizd-list">
+        <RecipeDetail v-for="item, i in searchedRcipies" :key="item.id" :recipe="item" @remove="postRemoveFromList"/>
+      </transition-group>
+    </n-list>
+    
 
   <n-divider  v-else dashed>
     Нет записей
@@ -21,7 +26,7 @@
 </template>
 
 <script>
-  import { NSpace, NList, NListItem, NThing, NButton, NDivider, NSelect } from 'naive-ui';
+  import { NSpace, NList, NListItem, NThing, NButton, NDivider, NSelect, NInput } from 'naive-ui';
   import RecipeDetail from '@/components/RecipeDetail'
 
 export default {
@@ -33,7 +38,8 @@ export default {
     RecipeDetail,
     NButton, 
     NDivider,
-    NSelect
+    NSelect,
+    NInput
   },
   props: {
     recipies: {
@@ -55,6 +61,7 @@ export default {
   ],
   data(){
     return{
+      search: '',
       selectValue: null,
       options: [
         {
@@ -88,6 +95,9 @@ export default {
   computed: {
     sortedRcipies(){
       return [...this.recipies].sort((post1, post2) => post1[this.selectValue]?.toString().localeCompare(post2[this.selectValue].toString()));
+    },
+    searchedRcipies(){
+      return this.sortedRcipies.filter((post) => post.title.includes(this.search));
     }
   },
   watch: {
@@ -121,7 +131,24 @@ export default {
     background: #eee;
   }
 
-  .list {
+  /*.list {
     background: #fffeee;
-  }
+  }*/
+
+  .pizd-list-item {
+  display: inline-block;
+  margin-right: 10px;
+}
+.pizd-list-enter-active,
+.pizd-list-leave-active {
+  transition: all 1s ease;
+}
+.pizd-list-enter-from,
+.pizd-list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+.pizd-list-move {
+  transition: transform 0.8s ease;
+}
 </style>

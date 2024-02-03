@@ -93,7 +93,7 @@ export default {
     },
     async fetchPosts(){
       try {
-        const fetched = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=3')
+        const fetched = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=10')
             .then(response => response.json());
             // console.log(fetched)
         this.posts = fetched;
