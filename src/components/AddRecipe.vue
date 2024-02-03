@@ -44,6 +44,9 @@ export default{
        useMessage,
        NMessageProvider
     },
+    props: [
+
+    ],
     data(){
       return{
         message: useMessage(),
@@ -68,7 +71,7 @@ export default{
       }
     }
   },
-
+  emits: ['update:modalClose', 'addPost'],
   methods: {
     handleValidateClick (e) {
       e.preventDefault();
@@ -76,12 +79,16 @@ export default{
       this.$refs.formRef.validate((errors) => {
         if (!errors) {
           this.message.success('Valid');
+          
           this.$emit('addPost', {
             id: new Date(), 
             title: this.formValue.name,
             body: this.formValue.text 
           });
+
           this.formValue.name = this.formValue.text = '';
+          
+          this.$emit('update:modalClose', false);
         } else {
           // console.log(errors);
           this.message.error('Invalid');

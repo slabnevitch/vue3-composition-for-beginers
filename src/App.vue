@@ -1,21 +1,32 @@
 <template>
-  <n-message-provider>
+  <n-message-provider >
     <n-config-provider :theme="theme">
       <n-layout>
-        <n-layout-content content-style="padding: 24px;">
-          <h1>{{customProp}}</h1>
+        <n-layout-content content-style="padding: 24px; height: 100%">
+       <!--    <h1>{{ counter}}</h1>
+          <n-button @click="counter += 1">counter increment</n-button> -->
           <n-space style="padding-bottom: 24px;">
             <!-- <n-button>{{theme}}</n-button> -->
             <n-button @click="theme = darkTheme">Dark</n-button>
             <n-button @click="theme = lightTheme">Light</n-button>
           </n-space>
-          <AddRecipe @addPost="postAdd" />
+          <n-button @click="showModal = true">
+            Добавить сообщение
+          </n-button>
+          
+          
+          <n-modal v-model:show="showModal" preset="dialog" title="Создание нового сообщения">
+            <slot>
+              <AddRecipe @addPost="postAdd" v-model:modalClose=" showModal"/>
+            </slot>
+          </n-modal>
+          
+          <n-flex justify="center">
+            <n-spin v-show="show" size="large" />
+          </n-flex>
 
-          <n-divider dashed>
-             <n-h2>Comments</n-h2>
-          </n-divider>
-        
-          <RecipeList :recipies="posts" @remove="postRemove" v-model:number="customProp"></RecipeList>
+          <RecipeList :recipies="posts" @remove="postRemove" v-model:customProp="counter"></RecipeList>
+   
         </n-layout-content>
       </n-layout>
       <!-- <n-global-style /> -->
@@ -33,7 +44,7 @@ import AddRecipe from '@/components/AddRecipe'
 import RecipeList from '@/components/RecipeList'
 
 
-import { darkTheme, lightTheme, NConfigProvider, NGlobalStyle, NSpace, NButton, NLayout, NLayoutHeader, NLayoutContent, NMessageProvider, NDivider, NH2 } from 'naive-ui';
+import { darkTheme, lightTheme, NConfigProvider, NGlobalStyle, NSpace, NButton, NLayout, NLayoutHeader, NLayoutContent, NMessageProvider, NDivider, NH2, NModal, NSpin, NFlex } from 'naive-ui';
 
 export default {
   name: 'app',
@@ -49,7 +60,9 @@ export default {
     NLayoutContent,
     NMessageProvider,
     NDivider,
-    NH2
+    NH2, NModal,
+     NSpin,
+     NFlex
   },
 
   // let posts = reactive([
@@ -58,17 +71,16 @@ export default {
 
   data(){
     return{
-      customProp: 0,
-
+      counter: 1,
+      show: true,
+      showModal: false,
+      posts: [],
+      
       lightTheme,
       darkTheme,
-      theme: darkTheme,
+      theme: darkTheme
 
-      posts: [
-        {id: 1, title:"Skotnik", body: 'i popki ih gremyat'},
-        {id: 2, title:"Skotnik", body: 'i popki ih gremyat-2'},
-        {id: 3, title:"Skotnik", body: 'i popki ih gremyat-3'}
-      ]
+
     }
   },
 
@@ -78,13 +90,26 @@ export default {
     },
     postRemove(deletedPost){
       this.posts = this.posts.filter(post => post.id !== deletedPost.id);
-    }
-  }
+    },
+    async fetchPosts(){
+      try {
+        const fetched = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=3')
+            .then(response => response.json())
+            // .then(json => console.log(json));
+        this.posts = fetched;
+        this.show = false;
+      } catch(e) {
+        // statements
+        console.log(e);
+      } finally {
 
-  // mounted(){
-  //   console.log(lightTheme)
-  //   console.log(darkTheme)
-  // },
+      }
+    }
+  },
+
+  mounted(){
+    this.fetchPosts();
+  }
 
   // setup(){
   //   return{
@@ -104,6 +129,13 @@ export default {
     padding: 0;
   }
 
+  html, body {
+    height: 100%;
+
+  }
+  #app{
+    height: 100%;
+  }
   body {
     font-family: 'Roboto', sans-serif;
     color: #222;
