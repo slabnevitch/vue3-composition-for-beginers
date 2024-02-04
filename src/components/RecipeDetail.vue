@@ -7,7 +7,7 @@
             size="small"
             src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
           />
-          <n-h3>cos(x)</n-h3>
+          <n-h3>{{recipe.id}}</n-h3>
         </n-space>
         <n-text type="primary">
          <n-h2>{{recipe.title}}</n-h2>

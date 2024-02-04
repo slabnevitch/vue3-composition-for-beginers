@@ -3,8 +3,8 @@
     <n-config-provider :theme="theme">
       <n-layout>
         <n-layout-content content-style="padding: 24px; height: 100%">
-       <!--    <h1>{{ counter}}</h1>
-          <n-button @click="counter += 1">counter increment</n-button> -->
+          <!-- <h1>{{ page}}</h1> -->
+          <!-- <n-button @click="counter += 1">counter increment</n-button> -->
           <n-space style="padding-bottom: 24px;">
             <!-- <n-button>{{theme}}</n-button> -->
             <n-button @click="theme = darkTheme">Dark</n-button>
@@ -25,7 +25,7 @@
             <n-spin v-show="show" size="large" />
           </n-flex>
 
-          <RecipeList v-model:recipies="posts" @remove="postRemove" v-model:customProp="counter"></RecipeList>
+          <RecipeList v-model:recipies="posts" @remove="postRemove" v-model:customProp="counter" v-model:currPage="page" v-model:totalPages="totalPages" v-model:limit="limit"></RecipeList>
    
         </n-layout-content>
       </n-layout>
@@ -71,6 +71,10 @@ export default {
 
   data(){
     return{
+      page: 1,
+      limit: 5,
+      totalPages: 0,
+
       counter: 1,
       show: true,
       showModal: false,
@@ -92,12 +96,18 @@ export default {
       this.posts = this.posts.filter(post => post.id !== deletedPost.id);
     },
     async fetchPosts(){
+      console.log('fetchPosts!!')
       try {
-        const fetched = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=10')
-            .then(response => response.json());
-            // console.log(fetched)
-        this.posts = fetched;
+        this.show = true;
+        const fetched = await fetch(`https://jsonplaceholder.typicode.com/posts?_limit=${this.limit},&_page=${this.page}`);
+            // .then(response => response.json());
+            console.log(fetched.headers.get('X-Total-Count'));
+
+        this.totalPages = Math.ceil(fetched.headers.get('X-Total-Count') / this.limit);
+            console.log(this.totalPages);
+        this.posts = await fetched.json();
         this.show = false;
+      
       } catch(e) {
         // statements
         console.log(e);
@@ -109,6 +119,12 @@ export default {
 
   mounted(){
     this.fetchPosts();
+  },
+
+  watch:{
+    page(){
+      this.fetchPosts();
+    }
   }
 
   // setup(){
@@ -135,67 +151,5 @@ export default {
   }
   #app{
     height: 100%;
-  }
-  body {
-    font-family: 'Roboto', sans-serif;
-    color: #222;
-  }
-
-  a {
-    text-decoration: none;
-    color: darkblue;
-    transition: .3s all ease;
-  }
-
-  .center {
-    text-align: center;
-  }
-
-  a:hover {
-    cursor: pointer;
-    opacity: .7;
-    text-decoration: underline;
-  }
-
-
-  .container {
-    max-width: 1000px;
-    margin: 0 auto;
-    height: 100vh;
-  }
-
-  .columns {
-    display: flex;
-  }
-
-  .detail, .list {
-    width: 50%;
-    border: 1px solid #eee;
-  }
-
-  .list {
-    border-right: 0;
-  }
-
-  .btn {
-    border-radius: 5px;
-    background: darkblue;
-    color: #fff;
-    padding: 6px 14px;
-    cursor: pointer;
-  }
-
-  .btn:disabled {
-    background-color: #eee;
-    color: black;
-    cursor: not-allowed;
-  }
-
-  .btn.remove {
-    background: darkred;
-  }
-
-  .btn.secondary{
-    background: grey;
-  }
+  }  
 </style>

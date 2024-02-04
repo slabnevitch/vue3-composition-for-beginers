@@ -22,11 +22,13 @@
   <n-divider  v-else dashed>
     Нет записей
   </n-divider>
+
+  <n-pagination v-model:page="page" :page-count="totalPages"  @update:page="pageUPdate"/>
  
 </template>
 
 <script>
-  import { NSpace, NList, NListItem, NThing, NButton, NDivider, NSelect, NInput } from 'naive-ui';
+  import { NSpace, NList, NListItem, NThing, NButton, NDivider, NSelect, NInput, NPagination } from 'naive-ui';
   import RecipeDetail from '@/components/RecipeDetail'
 
 export default {
@@ -39,7 +41,8 @@ export default {
     NButton, 
     NDivider,
     NSelect,
-    NInput
+    NInput,
+    NPagination
   },
   props: {
     recipies: {
@@ -50,17 +53,28 @@ export default {
     customProp: {
       type: Number,
       default: 0
+    },
+    currPage:{
+      type: Number,
+      default: 0
+    },
+    totalPages:{
+      type: Number,
+      default: 0
+    },
+    limit:{
+      type: Number,
+      default: 0
     }
-    // setCurrent: {
-    //   type: Function
-    // }
   },
   emits: [
     'remove',
-    'update:customProp'
+    'update:customProp',
+    'update:currPage'
   ],
   data(){
     return{
+      page: 0,
       search: '',
       selectValue: null,
       options: [
@@ -87,10 +101,12 @@ export default {
       let newProp = this.customProp + 1;
       console.log(this.customProp + 1);
       this.$emit('update:customProp',  this.customProp + 1);
+    },
+    pageUPdate(page){
+      console.log(page);
+      this.$emit('update:currPage', page);
+      // this.currPage = page;
     }
-    // selchange(){
-    //   console.log('slect!')
-    // }
   },
   computed: {
     sortedRcipies(){
