@@ -26,7 +26,13 @@
           </n-flex>
 
           <RecipeList v-model:recipies="posts" @remove="postRemove" v-model:customProp="counter" v-model:currPage="page" v-model:totalPages="totalPages" v-model:limit="limit"></RecipeList>
-   
+          
+          <!-- для бесконечной загрузки новых постов при скролле -->
+          <div ref="obsv" class="observer-block">
+              <n-flex justify="center">
+                <n-spin v-show="show" size="large" />
+               </n-flex>
+          </div>
         </n-layout-content>
       </n-layout>
       <!-- <n-global-style /> -->
@@ -105,7 +111,8 @@ export default {
 
         this.totalPages = Math.ceil(fetched.headers.get('X-Total-Count') / this.limit);
             console.log(this.totalPages);
-        this.posts = await fetched.json();
+        // this.posts = await fetched.json();//для пагинации
+        this.posts = [... this.posts, ... await fetched.json()];//для бесконечной загрузки новых постов при скролле 
         this.show = false;
       
       } catch(e) {
@@ -119,6 +126,24 @@ export default {
 
   mounted(){
     this.fetchPosts();
+
+    console.log(this.$refs.obsv);
+
+    // для бесконечной загрузки новых постов при скролле 
+    var observerCallback = (entries, observer) => {
+      if(entries[0].isIntersecting){
+        console.log('obsv intersect!');
+        if(this.page < this.totalPages){
+          this.page += 1;
+          this.fetchPosts();
+        }
+      }else{
+        // headerElem.classList.add('_scroll');
+      }
+    };
+
+    var headerObserver = new IntersectionObserver(observerCallback);
+    headerObserver.observe(this.$refs.obsv);
   },
 
   watch:{
