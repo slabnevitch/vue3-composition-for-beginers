@@ -1,12 +1,32 @@
 <template>
-  <router-view></router-view>
+    <n-config-provider :theme="theme">
+      <n-layout>
+        <n-layout-content content-style="padding: 24px; height: 100%">
+        
+            <router-view></router-view>
+        
+        </n-layout-content>
+      </n-layout>
+      <n-global-style />
+    </n-config-provider>
 </template>
-<script>
 
+
+<script>
+import { darkTheme, lightTheme, NConfigProvider, NGlobalStyle, NLayout, NLayoutContent } from 'naive-ui';
 
 export default {
-  name: 'app'
-  
+  name: 'app',
+  components:{
+    darkTheme, lightTheme, NConfigProvider, NGlobalStyle, NLayout, NLayoutContent
+  },
+  data(){
+    return{
+      lightTheme,
+      darkTheme,
+      theme: darkTheme
+    }
+  }
   
 }
 </script>
