@@ -19,11 +19,21 @@
         </n-blockquote>
         
         <n-divider dashed></n-divider>
+        <n-flex justify="space-between">
           <n-button
-           @click="removePost"
-           strong secondary type="error">
+            @click="$router.push(`/posts/${recipe.id}`)"
+            strong secondary>
+            Подробнее
+          </n-button>
+
+          <n-button
+          @click="removePost"
+          strong secondary type="error">
           Удалить запись
         </n-button>
+
+
+        </n-flex>
     </n-card>
      
     </n-list-item>
@@ -31,10 +41,10 @@
 
 <script>
   // import {ref, watch} from 'vue'
-  import { NListItem, NThing, NCard, NButton, NText, NSpace, NAvatar, NH2, NH3, NBlockquote, NDivider  } from 'naive-ui';
+  import { NListItem, NThing, NCard, NButton, NText, NSpace, NAvatar, NH2, NH3, NBlockquote, NDivider, NFlex  } from 'naive-ui';
 export default {
   components: {
-    NListItem, NThing, NCard, NButton, NText, NAvatar, NSpace, NH2, NH3, NBlockquote, NDivider 
+    NListItem, NThing, NCard, NButton, NText, NAvatar, NSpace, NH2, NH3, NBlockquote, NDivider, NFlex 
   },
   props: {
     recipe: {
