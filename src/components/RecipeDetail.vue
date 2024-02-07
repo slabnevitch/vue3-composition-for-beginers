@@ -10,7 +10,7 @@
           <n-h3>{{recipe.id}}</n-h3>
         </n-space>
         <n-text type="primary">
-         <n-h2>{{recipe.title}}</n-h2>
+         <n-h2>{{$store.getters.doubleLikes}} {{recipe.title}}</n-h2>
         </n-text>
         
         

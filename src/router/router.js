@@ -5,6 +5,7 @@ import Main from '@/pages/Main.vue'
 import Posts from '@/pages/Posts.vue'
 import About from '@/pages/About.vue'
 import SinglePost from '@/pages/SinglePost.vue'
+import PostsWithStore from '@/pages/PostsWithStore.vue'
 
 // const { createRouter, createWebHistory, createWebHashHistory } = VueRouter
 
@@ -12,7 +13,8 @@ const routes = [
   { path: '/', component: Main },
   { path: '/posts', component: Posts },
   { path: '/about', component: About },
-  { path: '/posts/:id', component: SinglePost }
+  { path: '/posts/:id', component: SinglePost },
+  { path: '/posts-data/', component: PostsWithStore }
 ];
 
 const router = createRouter({
