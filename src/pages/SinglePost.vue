@@ -1,21 +1,9 @@
 <template>
 	<h1>Post whit id= {{$route.params.id}}</h1>
+	<n-spin v-show="show" size="large" />
 	<n-list>
 	 <n-list-item style="padding: 15px">
-		<n-card>
-			<n-space align="space-between">
-				<n-avatar
-				round
-				size="small"
-				src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-				/>
-				<n-h3>{{post.id}}</n-h3>
-			</n-space>
-			<n-text type="primary">
-				<n-h2>{{post.title}}</n-h2>
-			</n-text>
-
-
+		<n-card :title="post.title">
 			<n-blockquote>
 				{{post.body}}
 			</n-blockquote>
@@ -28,27 +16,24 @@
 <script>
 	import {NList,
 	NListItem,
-NCard,
-NSpace,
-NAvatar,
-NText,
-NBlockquote} from 'naive-ui'
+	NCard,
+	NSpin,
+	NBlockquote} from 'naive-ui'
+
 export default {
 
   name: 'SinglePost',
 
   components:{NList,
-
+	NSpin,
   	NListItem,
 	NCard,
-	NSpace,
-	NAvatar,
-	NText,
 	NBlockquote
   },
 
   data () {
     return {
+    	show: true,
     	post:{
     		id: '',
     		title: '',
@@ -58,14 +43,25 @@ export default {
   },
   async mounted(){
   	console.log(`https://jsonplaceholder.typicode.com/posts/${this.$route.params.id}`)
-  	const currentPost = await fetch(`https://jsonplaceholder.typicode.com/posts/${this.$route.params.id}`)
-      .then(response => response.json());
-      console.log(currentPost);
-      this.post = {
-      	id: currentPost.id,
-      	title:  currentPost.title,
-      	body:  currentPost.body
-      }
+  	try {
+	  	const currentPost = await fetch(`https://jsonplaceholder.typicode.com/posts/${this.$route.params.id}`)
+	      .then(response => response.json());
+
+	      this.post = {
+	      	id: currentPost.id,
+	      	title:  currentPost.title,
+	      	body:  currentPost.body
+	      }
+
+  	} catch(e) {
+  		// statements
+  		console.log(e);
+  	}finally{
+  		console.log('finally');
+  		console.log(this.show);
+  		this.show = false;
+  		console.log(this.show);
+  	}
   } 
 }
 </script>
