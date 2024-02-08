@@ -21,9 +21,16 @@
         <n-divider dashed></n-divider>
         <n-flex justify="space-between">
           <n-button
-            @click="$router.push(`/posts/${recipe.id}`)"
+            @click="$router.push({name:'postContent', params:{id: recipe.id }})"
             strong secondary>
             Подробнее
+          </n-button>
+
+          <!-- <router-link :to="`posts/${recipe.id}/comments`">pizda</router-link> -->
+           <n-button
+            @click="$router.push({name:'comments', params:{id: recipe.id }})"
+            strong secondary>
+            Комментарии
           </n-button>
 
           <n-button

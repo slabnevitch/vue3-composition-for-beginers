@@ -5,6 +5,8 @@ import Main from '@/pages/Main.vue'
 import Posts from '@/pages/Posts.vue'
 import About from '@/pages/About.vue'
 import SinglePost from '@/pages/SinglePost.vue'
+import SinglePostContent from '@/components/SinglePostContent.vue'
+import PostComments from '@/pages/PostComments.vue'
 import PostsWithStore from '@/pages/PostsWithStore.vue'
 
 // const { createRouter, createWebHistory, createWebHashHistory } = VueRouter
@@ -13,7 +15,28 @@ const routes = [
   { path: '/', component: Main },
   { path: '/posts', component: Posts },
   { path: '/about', component: About },
-  { path: '/posts/:id', component: SinglePost },
+  { path: '/posts/:id', component: SinglePost,
+  	children: [
+      {
+        // PostComments будет отрендерен внутри <router-view> компонента SinglePost
+        // при соответствии /posts/:id/comments
+        name: 'postContent',
+        path: 'content',
+        component: SinglePostContent,
+      },
+      {
+        // PostComments будет отрендерен внутри <router-view> компонента SinglePost
+        // при соответствии /posts/:id/comments
+        name: 'nestedComments',
+        path: 'comments',
+        component: PostComments,
+      }
+    ]
+   },
+  { path: '/posts/:id/comments',
+   name: 'comments',
+   component: PostComments
+  },
   { path: '/posts-data/', component: PostsWithStore }
 ];
 
