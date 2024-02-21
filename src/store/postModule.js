@@ -1,12 +1,12 @@
 export const postModule = {
-	 state () {
-	    return {
+	 state: () => ({
+	    // return {
 	  		posts: [],
 	  		 page: 1,
 		     limit: 5,
 		     totalPages: 0
-	    }
-	  },
+	    // }
+	  }),
 	  mutations: {
 	    setNewPost(state, post) {
 	      state.posts.push(post);
@@ -15,7 +15,9 @@ export const postModule = {
 	      state.posts = state.posts.filter(post => post.id !== delPost.id);
 	    },
 	    setAllPosts(state, postsArray) {
-	      state.posts = [... state.posts, postsArray];
+	    	console.log(postsArray)
+	      state.posts =  postsArray;
+	      console.log(state.posts)
 	    },
 	    setTotalPages(state, payload) {
 	      state.totalPages = payload;
@@ -32,11 +34,12 @@ export const postModule = {
 	      console.log('fetchPosts!!')
 	      try {
 	        // this.show = true;
-	        const fetched = await fetch(`https://jsonplaceholder.typicode.com/posts?_limit=${this.limit},&_page=${this.page}`);
+	        const fetched = await fetch(`https://jsonplaceholder.typicode.com/posts?_limit=${state.limit},&_page=${state.page}`);
 	            // .then(response => response.json());
 	            // console.log(fetched.headers.get('X-Total-Count'));
 
-	        commit('setTotalPages', Math.ceil(fetched.headers.get('X-Total-Count') / this.limit));
+	        // console.log(await fetched.json())
+	        commit('setTotalPages', Math.ceil(fetched.headers.get('X-Total-Count') / state.limit));
 	        commit('setAllPosts', await fetched.json());
 	        // this.posts = [... this.posts, ... await fetched.json()];//для бесконечной загрузки новых постов при скролле 
 	        // this.show = false;
@@ -52,9 +55,13 @@ export const postModule = {
 	  getters: {
 	  	doubleLikes(state){
 	  		return state.likes * 2;
-	  	}
+	  	},
+	  	getPosts: state => {
+	      return state.posts;
+	    }
+
 	  },
 	  modules: {
 	  	
-  }
+ 		}
 }

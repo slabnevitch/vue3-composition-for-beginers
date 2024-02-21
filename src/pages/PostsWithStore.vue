@@ -2,6 +2,7 @@
 	<n-message-provider >
       <n-layout>
       	<h1>{{$store.state.likes}}</h1>
+        <h1>Pizduk@</h1>
 
         <n-layout-content content-style="padding: 24px; height: 100%">
           <!-- <h1>{{ page}}</h1> -->
@@ -89,12 +90,14 @@ export default {
   },
 
   methods: {
-    
+    postRemove(){
+      console.log('postRemove is called!')
+    }
   },
 
   mounted(){
-    // this.fetchPosts();
-
+    this.$store.dispatch('fetchPosts');
+    // console.log(this.posts)
     // для бесконечной загрузки новых постов при скролле 
   //   var observerCallback = (entries, observer) => {
   //     if(entries[0].isIntersecting){
@@ -110,7 +113,20 @@ export default {
   //   var headerObserver = new IntersectionObserver(observerCallback);
   //   headerObserver.observe(this.$refs.obsv);
   },
-
+  computed: {
+    posts() {
+      return this.$store.getters.getPosts;
+    },
+    page(){
+      return this.$store.state.page;
+    },
+    limit(){
+      return this.$store.state.limit;
+    },
+    totalPages(){
+      return this.$store.state.totalPages;
+    }
+  },
   watch:{
     // page(){
       // this.fetchPosts();
