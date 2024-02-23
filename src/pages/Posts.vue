@@ -99,6 +99,7 @@ export default {
       this.posts.push(newPost);
     },
     postRemove(deletedPost){
+      console.log(Array.isArray(this.posts));
       this.posts = this.posts.filter(post => post.id !== deletedPost.id);
     },
     async fetchPosts(){
@@ -110,9 +111,9 @@ export default {
             console.log(fetched.headers.get('X-Total-Count'));
 
         this.totalPages = Math.ceil(fetched.headers.get('X-Total-Count') / this.limit);
-            console.log(this.totalPages);
-        // this.posts = await fetched.json();//для пагинации
-        this.posts = [... this.posts, ... await fetched.json()];//для бесконечной загрузки новых постов при скролле 
+        this.posts = await fetched.json();//для пагинации
+        // this.posts = [... this.posts, ... await fetched.json()];//для бесконечной загрузки новых постов при скролле 
+            console.log( this.posts);
         this.show = false;
       
       } catch(e) {
@@ -130,20 +131,20 @@ export default {
     console.log(this.$refs.obsv);
 
     // для бесконечной загрузки новых постов при скролле 
-    var observerCallback = (entries, observer) => {
-      if(entries[0].isIntersecting){
-        console.log('obsv intersect!');
-        if(this.page < this.totalPages){
-          this.page += 1;
-          this.fetchPosts();
-        }
-      }else{
-        // headerElem.classList.add('_scroll');
-      }
-    };
+    // var observerCallback = (entries, observer) => {
+    //   if(entries[0].isIntersecting){
+    //     console.log('obsv intersect!');
+    //     if(this.page < this.totalPages){
+    //       this.page += 1;
+    //       this.fetchPosts();
+    //     }
+    //   }else{
+    //     // headerElem.classList.add('_scroll');
+    //   }
+    // };
 
-    var headerObserver = new IntersectionObserver(observerCallback);
-    headerObserver.observe(this.$refs.obsv);
+    // var headerObserver = new IntersectionObserver(observerCallback);
+    // headerObserver.observe(this.$refs.obsv);
   },
 
   watch:{

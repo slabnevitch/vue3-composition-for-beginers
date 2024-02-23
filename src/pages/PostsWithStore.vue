@@ -1,8 +1,7 @@
 <template>
 	<n-message-provider >
       <n-layout>
-      	<h1>{{$store.state.likes}}</h1>
-        <h1>Pizduk@</h1>
+        <h1>{{ getPage}}</h1>
 
         <n-layout-content content-style="padding: 24px; height: 100%">
           <!-- <h1>{{ page}}</h1> -->
@@ -24,17 +23,17 @@
           </n-modal>
           
           <n-flex justify="center">
-            <n-spin v-show="show" size="large" />
+            <n-spin v-show="isLoading" size="large" />
           </n-flex>
 
-          <RecipeList v-model:recipies="posts" @remove="postRemove" v-model:customProp="counter" v-model:currPage="page" v-model:totalPages="totalPages" v-model:limit="limit"></RecipeList>
+          <RecipeList v-model:recipies="posts" @remove="postRemove" v-model:customProp="counter" :currPage="page" @updatePage="changePagination" v-model:totalPages="totalPages" v-model:limit="limit"></RecipeList>
           
           <!-- для бесконечной загрузки новых постов при скролле -->
-          <div ref="obsv" class="observer-block">
+          <!-- <div ref="obsv" class="observer-block">
               <n-flex justify="center">
                 <n-spin v-show="show" size="large" />
                </n-flex>
-          </div>
+          </div> -->
         </n-layout-content>
       </n-layout>
   </n-message-provider>
@@ -42,6 +41,7 @@
 
 <script>
 	import {ref, reactive} from 'vue';
+  import { mapState, mapGetters, mapActions } from 'vuex';
 
 	import AddRecipe from '@/components/AddRecipe'
 
@@ -90,11 +90,60 @@ export default {
   },
 
   methods: {
-    postRemove(){
-      console.log('postRemove is called!')
+     // Использование vuex actions через вспомогательные ф-ции.
+    ...mapActions([
+     'changePagination',
+     'fetchPosts'
+    ]),
+    postRemove(deletedPost){
+      console.log(Array.isArray(this.posts));
+      this.$store.dispatch('postRemove', deletedPost);
+      // this.posts = this.posts.filter(post => post.id !== deletedPost.id);
+    },
+    pageUpdate(translatedPage){
+      // вызов методов из store/actions
+      // this.$store.dispatch('changePagination', translatedPage);
+
+      // вызов методов из store/actions, развернутых ч/з ...mapActions
+      // this.changePagination(translatedPage);
     }
   },
 
+  computed: {
+    // Использование vuex state & getters через вспомогательные ф-ции. 
+    ...mapState({
+      posts: state => state.post.posts, //здесь ".post" - название модуля, импортроанного в поле modules файла /store/index.js -- modules: {post: postModule}. Это название указывать обязательно.
+  
+      page: state => state.post.page,
+      limit: state => state.post.limit,
+      totalPages: state => state.post.totalPages,
+      isLoading: state => state.post.isLoading
+    }),
+    ...mapGetters([
+      'getPosts',
+      'getPage'
+
+    ]),
+
+    // Использование vuex state & getters как обычные computed-свойства 
+    // posts() {
+    //   return this.$store.getters.getPosts;
+    // },
+    // page(){
+    //   return this.$store.state.page;
+    // },
+    // limit(){
+    //   return this.$store.state.limit;
+    // },
+    // totalPages(){
+    //   return this.$store.state.totalPages;
+    // }
+  },
+  watch:{
+    page(){
+      this.fetchPosts();
+    }
+  },
   mounted(){
     this.$store.dispatch('fetchPosts');
     // console.log(this.posts)
@@ -113,25 +162,6 @@ export default {
   //   var headerObserver = new IntersectionObserver(observerCallback);
   //   headerObserver.observe(this.$refs.obsv);
   },
-  computed: {
-    posts() {
-      return this.$store.getters.getPosts;
-    },
-    page(){
-      return this.$store.state.page;
-    },
-    limit(){
-      return this.$store.state.limit;
-    },
-    totalPages(){
-      return this.$store.state.totalPages;
-    }
-  },
-  watch:{
-    // page(){
-      // this.fetchPosts();
-    // }
-  }
 
   // setup(){
   //   return{

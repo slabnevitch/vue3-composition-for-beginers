@@ -70,11 +70,12 @@ export default {
   emits: [
     'remove',
     'update:customProp',
-    'update:currPage'
+    'update:currPage',
+    'updatePage'
   ],
   data(){
     return{
-      page: 0,
+      page: 1,
       search: '',
       selectValue: null,
       options: [
@@ -105,6 +106,7 @@ export default {
     pageUPdate(page){
       console.log(page);
       this.$emit('update:currPage', page);
+      this.$emit('updatePage', page);
       // this.currPage = page;
     }
   },
