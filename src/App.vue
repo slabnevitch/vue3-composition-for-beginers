@@ -10,6 +10,7 @@
                   <router-link to="/about">About</router-link>
 
                   <router-link to="/posts-data">PostsStore</router-link>
+                  <router-link to="/posts-compositionapi">PostsComposition</router-link>
                 
               </n-flex>
             </n-flex>

@@ -8,6 +8,7 @@ import SinglePost from '@/pages/SinglePost.vue'
 import SinglePostContent from '@/components/SinglePostContent.vue'
 import PostComments from '@/pages/PostComments.vue'
 import PostsWithStore from '@/pages/PostsWithStore.vue'
+import PostsWithComposition from '@/pages/PostsWithComposition.vue'
 
 // const { createRouter, createWebHistory, createWebHashHistory } = VueRouter
 
@@ -37,7 +38,8 @@ const routes = [
    name: 'comments',
    component: PostComments
   },
-  { path: '/posts-data/', component: PostsWithStore }
+  { path: '/posts-data/', component: PostsWithStore },
+  { path: '/posts-compositionapi/', component: PostsWithComposition }
 ];
 
 const router = createRouter({
