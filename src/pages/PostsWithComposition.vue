@@ -3,7 +3,8 @@
       <n-layout>
         {{showModal}}
         <n-button @click="showModal = !showModal">showModal</n-button>
-        <!-- <h1>{{ getPage}}</h1>
+        <p>{{page}}</p>
+        <!-- <h1>{{ getPage}}</h1> -->
 
         <n-layout-content content-style="padding: 24px; height: 100%">
           <n-space style="padding-bottom: 24px;">
@@ -26,7 +27,7 @@
             <n-spin v-show="isLoading" size="large" />
           </n-flex>
 
-          <RecipeList v-model:recipies="posts" @remove="postRemove" v-model:customProp="counter" :currPage="page" @updatePage="changePagination" v-model:totalPages="totalPages" v-model:limit="limit"></RecipeList> -->
+         <RecipeList v-model:recipies="posts" @remove="postRemove" v-model:customProp="counter" v-model:currPage="page" v-model:totalPages="totalPages" v-model:limit="limit"></RecipeList>
           
           <!-- для бесконечной загрузки новых постов при скролле -->
           <!-- <div ref="obsv" class="observer-block">
@@ -34,14 +35,16 @@
                 <n-spin v-show="show" size="large" />
                </n-flex>
           </div> -->
-        <!-- </n-layout-content> -->
+        </n-layout-content>
       </n-layout>
   </n-message-provider>
 </template>
 
 <script>
-	import {ref, reactive, onMounted} from 'vue';
+	import {ref, reactive, watch, onMounted} from 'vue';
   import { mapState, mapGetters, mapActions, useStore } from 'vuex';
+
+  import { fetchPosts } from '@/hooks/fetchPosts.js';
 
 	import AddRecipe from '@/components/AddRecipe'
 
@@ -89,76 +92,54 @@ export default {
   //   }
   // },
   setup(props, context){
-   const store = useStore();//использование store. Нужен импорт import { useStore } from 'vuex';
-
-    console.log(context)
+   // const store = useStore();//использование store. Нужен импорт import { useStore } from 'vuex';
     const showModal = ref(false);
+    const counter = ref(1);
 
-    const fetchPosts = () => {
-      store.dispatch('fetchPosts');
+
+    const page = ref( 1);
+    const limit = ref( 5);
+    const {posts, show, totalPages} = fetchPosts( page.value, limit.value);
+    console.log(posts)
+    // onMounted(fetchPosts);
+
+    const postAdd = (newPost) => {
+      posts.push(newPost);
     };
 
-    onMounted(fetchPosts);
+    const postRemove = (deletedPost) => {
+      // console.log(Array.isArray(this.posts));
+      posts.value = posts.value.filter(post => post.id !== deletedPost.id);
+    }
+
+    watch(page, (newValue, oldValue) => {
+      fetchPosts(page.value, limit.value);
+      console.log('watch page')
+      console.log(posts.value)
+    });
     
+    // onMounted( () => {
+    //  console.log('mountins!');
+    //   fetchPosts( page.value, limit.value);
+    // });
+
     return{
       theme: ref(darkTheme),
       darkTheme,
       lightTheme,
 
-      showModal
+      showModal,
+      limit,
+      page,
+      counter,
+      postAdd,
+      postRemove,
+      posts,
+      isLoading: show,
+      totalPages
     }
   }
-  // methods: {
-     // Использование vuex actions через вспомогательные ф-ции.
-    // ...mapActions([
-    //  'changePagination',
-    //  'fetchPosts'
-    // ]),
-    // postRemove(deletedPost){
-    //   console.log(Array.isArray(this.posts));
-    //   this.$store.dispatch('postRemove', deletedPost);
-    //   // this.posts = this.posts.filter(post => post.id !== deletedPost.id);
-    // },
 
-    // pageUpdate(translatedPage){
-      // вызов методов из store/actions
-      // this.$store.dispatch('changePagination', translatedPage);
-
-      // вызов методов из store/actions, развернутых ч/з ...mapActions
-      // this.changePagination(translatedPage);
-    // }
-  // },
-
-  // computed: {
-    // Использование vuex state & getters через вспомогательные ф-ции. 
-    // ...mapState({
-    //   posts: state => state.post.posts, //здесь ".post" - название модуля, импортроанного в поле modules файла /store/index.js -- modules: {post: postModule}. Это название указывать обязательно.
-  
-    //   page: state => state.post.page,
-    //   limit: state => state.post.limit,
-    //   totalPages: state => state.post.totalPages,
-    //   isLoading: state => state.post.isLoading
-    // }),
-    // ...mapGetters([
-    //   'getPosts',
-    //   'getPage'
-
-    // ]),
-
-    // Использование vuex state & getters как обычные computed-свойства 
-    // posts() {
-    //   return this.$store.getters.getPosts;
-    // },
-    // page(){
-    //   return this.$store.state.page;
-    // },
-    // limit(){
-    //   return this.$store.state.limit;
-    // },
-    // totalPages(){
-    //   return this.$store.state.totalPages;
-    // }
-  // },
   // watch:{
     // page(){
     //   this.fetchPosts();
