@@ -1,17 +1,25 @@
-import {ref, reactive, onMounted} from 'vue';
+import {ref, reactive, watch, onMounted} from 'vue';
 
-export async function fetchPosts(page, limit){
+export function fetchPosts(limit){
 	console.log('fetchPosts!!');
-	// const totalPages = ref(0);
 
+	// все эти перемнные сохранят свою реактивность при импорте в любой вью компонент
+	// (в данном случае - в PostsWithComposition.vue)
+	const posts = ref([]); 
+	const page = ref(1);
+	const totalPages = ref(0);
+	const isLoading = ref(true);
+
+	const fetching = async () => {
+		isLoading.value = true;
 		try {
 
-	        return  await fetch(`https://jsonplaceholder.typicode.com/posts?_limit=${ limit},&_page=${page}`);
+	        const response =  await fetch(`https://jsonplaceholder.typicode.com/posts?_limit=${limit},&_page=${page.value}`);
 	            // .then(response => response.json());
-	            console.log(fetched.headers.get('X-Total-Count'));
+	            console.log(response.headers.get('X-Total-Count'));
 
-	        // totalPages.value = Math.ceil(fetched.headers.get('X-Total-Count') / limit);
-	         await fetched;//для пагинации
+	        totalPages.value = Math.ceil(response.headers.get('X-Total-Count') / limit);
+	        posts.value = await response.json();//для пагинации
 	        
 	        // this.posts = [... this.posts, ... await fetched.json()];//для бесконечной загрузки новых постов при скролле 
 	            // console.log( fetchedPosts.value);
@@ -21,11 +29,14 @@ export async function fetchPosts(page, limit){
 	        console.log(e);
 	      } finally {
 
+			isLoading.value = false;
 	      }
+	}
 
-    // onMounted(fetching);
-  // return{
-  // 	fetchedPosts, totalPages
-  // }
+    onMounted(fetching);
+    watch(page, fetching);
+  return{
+  	posts, isLoading, totalPages, page
+  }
 
 }

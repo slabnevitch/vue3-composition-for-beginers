@@ -2,7 +2,7 @@
 	<n-message-provider >
     <n-config-provider :theme="theme">
       <n-layout>
-        {{theme.name}}
+        <!-- {{theme.name}} -->
         <!-- <n-button @click="showModal = !showModal">showModal</n-button> -->
         <!-- <p>{{posts}}</p> -->
         <!-- <h1>{{totalPages.value}}</h1> -->
@@ -93,28 +93,16 @@ export default {
 
   //   }
   // },
-  setup(){
+  setup(setup, ctx){
+     
    // const store = useStore();//использование store. Нужен импорт import { useStore } from 'vuex';
     const showModal = ref(false);
     const counter = ref(1);
     const theme = ref(darkTheme);
 
-    const posts = ref([]); 
-    const page = ref(1);
-    const totalPages = ref(0);
     const limit = 4;
-    const isLoading = ref(true);
-
-    
-    const getPosts = async () => {
-      isLoading.value = true;
-      const response = await fetchPosts(page.value, limit);
-      totalPages.value = Math.ceil(response.headers.get('X-Total-Count') / limit);
-    
-      posts.value = await response.json();
-      isLoading.value = false;
-    }
-
+    const {posts, isLoading, totalPages, page} = fetchPosts(limit);// получение постов и д.р. из декомпозированной ф-ции. '@/hooks/fetchPosts.js';
+   
     const postAdd = (newPost) => {
       posts.value.push(newPost);
     };
@@ -124,11 +112,11 @@ export default {
       posts.value = posts.value.filter(post => post.id !== deletedPost.id);
     }
 
-    watch(page, (newValue, oldValue) => {
-      getPosts(page.value, limit.value);
-    });
+    // watch(page, (newValue, oldValue) => {
+    //   getPosts(page.value, limit.value);
+    // });
     
-    onMounted(getPosts);
+    // onMounted(getPosts);
 
     return{
       theme,
