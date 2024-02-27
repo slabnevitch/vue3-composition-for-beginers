@@ -1,10 +1,11 @@
 <template>
 	<n-message-provider >
+    <n-config-provider :theme="theme">
       <n-layout>
-        {{showModal}}
-        <n-button @click="showModal = !showModal">showModal</n-button>
-        <p>{{posts}}</p>
-        <h1>{{totalPages.value}}</h1>
+        {{theme.name}}
+        <!-- <n-button @click="showModal = !showModal">showModal</n-button> -->
+        <!-- <p>{{posts}}</p> -->
+        <!-- <h1>{{totalPages.value}}</h1> -->
 
         <n-layout-content content-style="padding: 24px; height: 100%">
           <n-space style="padding-bottom: 24px;">
@@ -23,9 +24,9 @@
             </slot>
           </n-modal>
           
-          <!-- <n-flex justify="center">
+          <n-flex justify="center">
             <n-spin v-show="isLoading" size="large" />
-          </n-flex> -->
+          </n-flex>
 
          <RecipeList v-model:recipies="posts" @remove="postRemove" v-model:customProp="counter" v-model:currPage="page" v-model:totalPages="totalPages" v-model:limit="limit"></RecipeList>
           
@@ -37,6 +38,7 @@
           </div> -->
         </n-layout-content>
       </n-layout>
+    </n-config-provider>
   </n-message-provider>
 </template>
 
@@ -100,13 +102,17 @@ export default {
     const posts = ref([]); 
     const page = ref(1);
     const totalPages = ref(0);
-    const limit = 5;
+    const limit = 4;
+    const isLoading = ref(true);
+
     
     const getPosts = async () => {
+      isLoading.value = true;
       const response = await fetchPosts(page.value, limit);
       totalPages.value = Math.ceil(response.headers.get('X-Total-Count') / limit);
     
       posts.value = await response.json();
+      isLoading.value = false;
     }
 
     const postAdd = (newPost) => {
@@ -136,7 +142,7 @@ export default {
       postAdd,
       postRemove,
       posts,
-      // isLoading: show,
+      isLoading,
       totalPages
     }
   }
