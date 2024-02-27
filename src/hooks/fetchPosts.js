@@ -1,12 +1,10 @@
 import {ref, reactive, onMounted} from 'vue';
 
-export function fetchPosts(page, limit){
+export async function fetchPosts(page, limit){
 	console.log('fetchPosts!!');
 	const show = ref(false),
-    	totalPages = ref( 0),
-    	posts = ref([]);
+    	totalPages = ref(0);
 
-    const fetching = async () => {
 		try {
 	        show.value = true;
 	        const fetched = await fetch(`https://jsonplaceholder.typicode.com/posts?_limit=${ limit},&_page=${page}`);
@@ -14,10 +12,11 @@ export function fetchPosts(page, limit){
 	            console.log(fetched.headers.get('X-Total-Count'));
 
 	        totalPages.value = Math.ceil(fetched.headers.get('X-Total-Count') / limit);
-	        posts.value = await fetched.json();//для пагинации
-	        // this.posts = [... this.posts, ... await fetched.json()];//для бесконечной загрузки новых постов при скролле 
-	            console.log( posts.value);
 	        show.value = false;
+	        return await fetched;//для пагинации
+	        
+	        // this.posts = [... this.posts, ... await fetched.json()];//для бесконечной загрузки новых постов при скролле 
+	            // console.log( fetchedPosts.value);
 	      
 	      } catch(e) {
 	        // statements
@@ -25,11 +24,10 @@ export function fetchPosts(page, limit){
 	      } finally {
 
 	      }
-    }
-    
-    onMounted(fetching);
-  return{
-  	posts, show, totalPages
-  }
+
+    // onMounted(fetching);
+  // return{
+  // 	fetchedPosts, totalPages
+  // }
 
 }

@@ -23,6 +23,7 @@
     Нет записей
   </n-divider>
 
+  <p>totalPages: {{typeof totalPages}}</p>
   <n-pagination v-model:page="page" :page-count="totalPages"  @update:page="pageUPdate"/>
  
 </template>

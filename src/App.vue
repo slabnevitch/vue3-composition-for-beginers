@@ -56,5 +56,8 @@ export default {
   }
   #app{
     height: 100%;
-  }  
+  }
+  .router-link-active{
+    color: orange;
+  }
 </style>
