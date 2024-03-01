@@ -1,9 +1,9 @@
 <template>
-  <!-- <div>
-    
+  <div>
+    {{recipies2}}
   </div>
-  <n-button @click="customPropClick">change customProp</n-button>
-  <n-button>{{customProp}}</n-button> -->
+  <!-- <n-button @click="customPropClick">change customProp</n-button> -->
+  <!-- <n-button>{{customProp}}</n-button> -->
   
   <n-divider v-if="recipies.length > 0" dashed>
     Comments
@@ -14,7 +14,7 @@
       <n-select v-model:value="selectValue" :options="options" placeholder="Сортировка" />
       
       <transition-group name="pizd-list">
-        <RecipeDetail v-for="item, i in searchedRcipies" :key="item.id" :recipe="item" @remove="postRemoveFromList"/>
+        <!-- <RecipeDetail v-for="item, i in filteredAndSearchedPosts" :key="item.id" :recipe="item" @remove="postRemoveFromList"/> -->
       </transition-group>
     </n-list>
     
@@ -29,8 +29,10 @@
 </template>
 
 <script>
+  import {ref, toRef, defineProps} from 'vue';
   import { NSpace, NList, NListItem, NThing, NButton, NDivider, NSelect, NInput, NPagination } from 'naive-ui';
   import RecipeDetail from '@/components/RecipeDetail'
+  import { filterPosts } from '@/hooks/filterPosts.js'
 
 export default {
   components: {
@@ -74,57 +76,46 @@ export default {
     'update:currPage',
     'updatePage'
   ],
-  data(){
+  
+  setup(props){
+    // const recipies2 =  toRef(props, 'recipies');
+    const page = ref(1);
+    const search = ref('');
+      const selectValue = ref(null);
+    console.log( props.recipies);
+          const filteredAndSearchedPosts = filterPosts(props.recipies, search.value);
+
+    const postRemoveFromList = (removedPost) => {
+      $emit('remove', removedPost);
+    };
+    const customPropClick = () => {
+      // let newProp = customProp.value + 1;
+      // console.log(customProp.value + 1);
+      $emit('update:customProp',  customProp.value + 1);
+    };
+    const pageUPdate = () => {
+      console.log(page.value);
+      $emit('update:currPage', page.value);
+      $emit('updatePage', page.value);
+    }
+
     return{
-      page: 1,
-      search: '',
-      selectValue: null,
-      options: [
-        {
-          label: "По заголовку",
-          value: "title"
-        },
-        {
-          label: "По содержанию",
-          value: "body"
-        },
-        {
-          label: "По идентификатору",
-          value: "id"
-        }
-      ]
+      page,
+      filteredAndSearchedPosts,
+      postRemoveFromList,
+      pageUPdate,
+      recipies2
     }
-  },
-  methods: {
-    postRemoveFromList(removedPost){
-      this.$emit('remove', removedPost);
-    },
-    customPropClick(){
-      let newProp = this.customProp + 1;
-      console.log(this.customProp + 1);
-      this.$emit('update:customProp',  this.customProp + 1);
-    },
-    pageUPdate(page){
-      console.log(page);
-      this.$emit('update:currPage', page);
-      this.$emit('updatePage', page);
-      // this.currPage = page;
-    }
-  },
-  computed: {
-    sortedRcipies(){
-      return [...this.recipies].sort((post1, post2) => post1[this.selectValue]?.toString().localeCompare(post2[this.selectValue].toString()));
-    },
-    searchedRcipies(){
-      return this.sortedRcipies.filter((post) => post.title.includes(this.search));
-    }
-  },
-  watch: {
-    selectValue(){
-      console.log(this.selectValue);
-    }
+    // watch: {
+    //   selectValue(){
+    //     console.log(this.selectValue);
+    //   }
+    // }
+
   }
+
 }
+
 </script>
 
 <style>

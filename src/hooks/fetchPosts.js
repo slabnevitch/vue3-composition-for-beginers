@@ -22,7 +22,7 @@ export function fetchPosts(limit){
 	        posts.value = await response.json();//для пагинации
 	        
 	        // this.posts = [... this.posts, ... await fetched.json()];//для бесконечной загрузки новых постов при скролле 
-	            // console.log( fetchedPosts.value);
+	            console.log( posts.value);
 	      
 	      } catch(e) {
 	        // statements
